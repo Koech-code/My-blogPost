@@ -1,0 +1,7 @@
+span {
+    color: whitesmoke;
+    background-image: linear-gradient(red, green, blue);
+    background-repeat: no-repeat;
+    font-size: 30px;
+    border-radius: 5%;
+}
