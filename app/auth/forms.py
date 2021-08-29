@@ -4,10 +4,11 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import  Required, Email, EqualTo
 from wtforms.validators import ValidationError
 from ..models import User
+from wtforms.fields.html5 import EmailField
 
 class RegistrationForm(FlaskForm):
     username=StringField('Input your preferred username', validators=[Required()])
-    email=StringField('Your email address', validators=[Required(), Email()])
+    email=EmailField('Your email address', validators=[Required(), Email()])
     password=PasswordField('Create your password', validators=[Required(), EqualTo('password_confirm', message='passwords must match')])
     password_confirm=PasswordField('confirm the password you\'ve created', validators=[Required()])
     submit=SubmitField('Sign up')
@@ -21,7 +22,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('The username you have used has already been taken. use another one.')
 
 class LoginForm(FlaskForm):
-    email=StringField('You email address', validators=[Required(), Email()])
+    email=EmailField('You email address', validators=[Required(), Email()])
     password=PasswordField('Input your password', validators=[Required()])
     remember=BooleanField('Want your password remembered?')
     submit=SubmitField('sign In')
