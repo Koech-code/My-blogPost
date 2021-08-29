@@ -23,7 +23,7 @@
 
                 <li><a id="navi"  href="/">Home</a></li>
                 <li>
-                    <a id="navi" href="">Profile</a>
+                    <a id="navi" href="{{url_for('main.profile',uname=current_user.username)}}">Profile</a>
                 </li>
                 <li>
                     <a id="navi" href="/new_post">Blog-post</a>
