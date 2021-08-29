@@ -8,6 +8,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     QUOTE_API_BASE_URL='http://quotes.stormconsultancy.co.uk/random.json (Links to an external site.)'
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://moringa:7166@localhost/blogs'
+    UPLOADED_PHOTOS_DEST ='app/static/photos'
 
     #  email configurations
     MAIL_SERVER = 'smtp.googlemail.com'
