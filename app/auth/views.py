@@ -5,7 +5,7 @@ from flask_login.utils import login_required
 from . import auth
 from . forms import RegistrationForm, LoginForm
 from ..models import User
-from . import db
+from .. import db
 
 @auth.route('/login',methods=['GET','POST'])
 def login():
@@ -20,7 +20,7 @@ def login():
 
     return render_template('auth/login.html',login_form = login_form)
 
-@auth.route('/register', methods=['GET, POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
     form=RegistrationForm()
     if form.validate_on_submit():
