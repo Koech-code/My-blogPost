@@ -2,7 +2,7 @@ body {
     background-image: linear-gradient(140deg, #628DFD, #62FD71);
     background-repeat: no-repeat;
     background-position: cover;
-    height: 170vh;
+    height: 200vh;
 }
 
 span {
@@ -171,6 +171,12 @@ footer p {
         font-size: 28px;
         font-weight: 400;
     }
+}
 
+#pphoto {
+    border-radius: 50%;
+}
 
+#edit {
+    font-size: 30px;
 }
