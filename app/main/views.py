@@ -1,10 +1,12 @@
-from flask import render_template,request, redirect, url_for, flash
+from flask import render_template,request, redirect, url_for, flash, abort
 from . import main
 from app.models import User,Blog,Comment,Subscriber
 from ..requests import get_quotes
 from flask_login import login_required, current_user
 from .forms import CreateBlog
 from ..email import mail_message
+from .forms import UpdateProfile
+from .. import db, photos
 
 @main.route('/')
 def index():
@@ -15,8 +17,49 @@ def index():
     
     quotes = get_quotes()
     post=Blog.query.all()
-    
-    return render_template('index.html', quotes=quotes, post=post)
+    blogs = Blog.query.all()
+    return render_template('index.html', quotes=quotes, post=post, blogs=blogs)
+
+
+@main.route('/user/<uname>')
+def profile(uname):
+    user = User.query.filter_by(username = uname).first()
+
+    if user is None:
+        abort(404)
+
+    return render_template("profile/profile.html", user = user)
+
+
+@main.route('/user/<uname>/update',methods = ['GET','POST'])
+@login_required
+def update_profile(uname):
+    user = User.query.filter_by(username = uname).first()
+    if user is None:
+        abort(404)
+
+    form = UpdateProfile()
+
+    if form.validate_on_submit():
+        user.bio = form.bio.data
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for('.profile',uname=user.username))
+
+    return render_template('profile/update.html',form =form)
+
+@main.route('/user/<uname>/update/pic',methods= ['POST'])
+@login_required
+def update_pic(uname):
+    user = User.query.filter_by(username = uname).first()
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit()
+    return redirect(url_for('main.profile',uname=uname))
 
 
 @main.route('/new_post', methods=['POST','GET'])
@@ -50,4 +93,15 @@ def subscribe():
     new_subscriber.save_subscriber()
     mail_message("Subscribed to Nicky's Blogging site","email/subscriber",new_subscriber.email,new_subscriber=new_subscriber)
     flash('Sucessfuly subscribed')
+    return redirect(url_for('main.index'))
+
+
+@main.route('/blog/<blog_id>', methods = ['POST'])
+@login_required
+def delete_post(blog_id):
+    blog = Blog.query.get(blog_id)
+    if blog.user != current_user:
+        abort(403)
+    blog.delete()
+    flash("You have deleted your Blog succesfully!")
     return redirect(url_for('main.index'))
